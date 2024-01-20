@@ -1,0 +1,35 @@
+iversion: 2
+
+models:
+  - name: covid_symptom_scores_detail_long
+    description: This model maintains the granularity of data  but pivots symptoms into two columns (symptom and score).  Rows with missing scores or bad scores are excluded.  The score is converted to a FLOAT64
+    columns: 
+      - name: score
+        tests:
+          - not_null
+      - name: symptom
+        tests:
+          - not_null
+
+  - name: covid_symptoms_country_rank
+    description: This model calculates the rank of a symptom at a country level based on highest score.  Additional columns are added for troubleshooting.
+    columns:
+      - name: country_region_code
+      - name: country_region
+      - name: symptom
+        tests:
+          - not_null
+      - name: rank
+        description: Rank in terms of highest total score
+        tests:
+          - not_null
+      - name: total_scores
+        tests:
+          - not_null
+      - name: last_updated_dt
+        description: The date the ranking data was generated. A delay means the job generating this data has not run.
+      - name: start_date
+        description: The earliest date of data used (beginning of 90 days)
+      - name: end_date
+        description: The latest date of data used (end of 90 days).  A delay means the source table is stable
+
